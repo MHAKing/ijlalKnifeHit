@@ -1,0 +1,28 @@
+{
+  "__type__": "cc.SpriteFrame",
+  "content": {
+    "name": "ic_knife",
+    "texture": "e159d523-a4d4-46f4-972e-88f6b1cec07b",
+    "atlas": "",
+    "rect": [
+      0,
+      0,
+      63,
+      251
+    ],
+    "offset": [
+      0,
+      0
+    ],
+    "originalSize": [
+      63,
+      251
+    ],
+    "capInsets": [
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

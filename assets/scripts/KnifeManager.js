@@ -76,15 +76,17 @@ cc.Class({
         this.isActive = false;
         console.log("selfCollider: ",selfCollider);
         //updating rigid body dynamics of the knife
-        selfCollider.body._type = 1; //setting the type of bofy to kinematic
-        selfCollider.body.linearVelocity = new cc.Vec2(0,0); //resetting linear velocity 
-        selfCollider.body.gravityScale = 0; //setting gravity scale to 0 so that gravity does not have impact on this knife
-        //updating box collider of the knife
-        this.oldSize = selfCollider.size; //saving old size of collider
-        this.oldOffset = selfCollider.offset; //saving old offset of collider
-        selfCollider.size = new cc.Vec2(this.oldSize.width, 80); //reducing the size of knife collider
-        selfCollider.offset = new cc.Vec2(this.oldOffset.x, -23.5); //shifting down the knife box collider
-        selfCollider.node.setParent(otherCollider.node);
+        // selfCollider.body._type = 1; //setting the type of bofy to kinematic
+        // selfCollider.body.linearVelocity = new cc.Vec2(0,0); //resetting linear velocity 
+        // selfCollider.body.gravityScale = 0; //setting gravity scale to 0 so that gravity does not have impact on this knife
+        // //updating box collider of the knife
+        // this.oldSize = selfCollider.size; //saving old size of collider
+        // this.oldOffset = selfCollider.offset; //saving old offset of collider
+        // selfCollider.size = new cc.Vec2(this.oldSize.width, 80); //reducing the size of knife collider
+        // selfCollider.offset = new cc.Vec2(this.oldOffset.x, -23.5); //shifting down the knife box collider
+        // selfCollider.node.setParent(otherCollider.node);
+        this.node.removeComponent(cc.PhysicsBoxCollider);
+        this.node.removeComponent(cc.RigidBody);
         console.log("pre solve");
     }
 

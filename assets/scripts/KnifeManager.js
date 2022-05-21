@@ -5,6 +5,8 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+var gameManager = null;
+
 cc.Class({
     extends: cc.Component,
 
@@ -33,19 +35,22 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        // let manager = cc.director.getCollisionManager();
+        let manager = cc.director.getCollisionManager();
 
-        // // Enabled the colider manager.
-        // manager.enabled = true;
+        // Enabled the colider manager.
+        manager.enabled = true;
 
-        // // Enabled draw collider
-        // manager.enabledDebugDraw = true;
+        // Enabled draw collider
+        manager.enabledDebugDraw = true;
 
         // // Enabled draw collider bounding box
         // manager.enabledDrawBoundingBox = true;
+        if(!gameManager)
+            gameManager = require("gameManager");
+
         this.isActive = true;
         this.selfRB = this.node.getComponent(cc.RigidBody); //getting rigid body component of this knife instance
-        this.selfCollider = this.node.getComponent(cc.PhysicsBoxCollider); //getting box collider component of this knife instance
+        this.selfCollider = this.node.getComponent(cc.BoxCollider); //getting box collider component of this knife instance
         //listening for mouse click on this system
         // cc.systemEvent.on(cc.SystemEvent.EventType.MOUSE_DOWN,this.onClick,this);
         this.node.on('mousedown',this.onClick,this);
@@ -64,17 +69,18 @@ cc.Class({
         if(!this.isActive)
             return;
         console.log("clicked");
+        // this.selfRB._type = 2;
         this.selfRB.applyLinearImpulse(this.throwForce, this.selfRB.getWorldCenter(),true);
         this.selfRB.gravityScale = 1;
     },
     onBeginContact(){
-        console.log("contact");
+        // console.log("contact");
     },
     onPreSolve(contact,selfCollider, otherCollider){
         if(!this.isActive)
             return;
         this.isActive = false;
-        console.log("selfCollider: ",selfCollider);
+        // console.log("selfCollider: ",selfCollider);
         //updating rigid body dynamics of the knife
         // selfCollider.body._type = 1; //setting the type of bofy to kinematic
         // selfCollider.body.linearVelocity = new cc.Vec2(0,0); //resetting linear velocity 
@@ -87,7 +93,33 @@ cc.Class({
         // selfCollider.node.setParent(otherCollider.node);
         this.node.removeComponent(cc.PhysicsBoxCollider);
         this.node.removeComponent(cc.RigidBody);
-        console.log("pre solve");
+        this.node.addComponent(cc.CircleCollider);
+        // gameManager.Instance.spawnNewKnife();
+    },
+    onCollisionEnter(){
+        console.log("collision enter");
+    },
+    onCollisionStay(self, other){
+        if(!this.isActive)
+            return;
+        this.isActive = false;
+        console.log("selfCollider: ",this.selfCollider);
+        console.log("other: ",other);
+        if(other.node._name == 'log')
+            console.log("other name is log");
+        if(this.selfCollider){
+            this.selfRB.linearVelocity = new cc.Vec2(0,0);
+            this.selfRB.gravityScale = 0;
+            this.selfCollider.size.height = 70;
+            this.selfCollider.offset.y = -28.5;
+            this.node.removeComponent(cc.RigidBody);
+            this.node.setParent(gameManager.Instance.log);;
+            gameManager.Instance.spawnNewKnife();
+            console.log("this.node: ",this.node);
+        }
+        
+        
     }
 
 });
+module.exports = gameManager;
